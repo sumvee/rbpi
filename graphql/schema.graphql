@@ -1,23 +1,34 @@
-"A datetime string with format `Y-m-d H:i:s`, e.g. `2018-05-23 13:43:32`."
-scalar DateTime @scalar(class: "Nuwave\\Lighthouse\\Schema\\Types\\Scalars\\DateTime")
+#"A datetime string with format `Y-m-d H:i:s`, e.g. `2018-05-23 13:43:32`."
+scalar DateTime @scalar(class: "\\Nuwave\\Lighthouse\\Schema\\Types\\Scalars\\DateTime")
+
+
 
 "Indicates what fields are available at the top level of a query operation."
 type Query {
-    "Find a single user by an identifying attribute."
     user(
-      "Search by primary key."
-      id: ID @eq @rules(apply: ["prohibits:email", "required_without:email"])
-
-      "Search by email address."
-      email: String @eq @rules(apply: ["prohibits:id", "required_without:id", "email"])
-    ): User @find
+        id: ID @eq @rules(apply: ["prohibits:email", "required_without:email"]),
+        email: String @eq @rules(apply: ["prohibits:id", "required_without:id", "email"])
+    ): User @find(model: "App\\Models\\User")
 
     "List multiple users."
-    users(
-      "Filters by name. Accepts SQL LIKE wildcards `%` and `_`."
-      name: String @where(operator: "like")
-    ): [User!]! @paginate(defaultCount: 10)
+    users: [User!]! @all(model: "App\\Models\\User")
+
+    "List all gps data."
+    allGpsData: [GpsData!]! @all(model: "App\\Models\\GpsData")
+
+
+
+    "List last GPS data."
+    firstGpsData: GpsData @first(model: "App\\Models\\GpsData") @orderBy(column: "recorded_at", direction: ASC)
+
+#    lastGpsData: GpsData @last(model: "App\\Models\\GpsData")
+
+    "List last GPS data."
+    lastGpsData: GpsData @first(model: "App\\Models\\GpsData") @orderBy(column: "recorded_at", direction: DESC)
+
+
 }
+
 
 "Account of a person who utilizes this application."
 type User {
@@ -39,3 +50,14 @@ type User {
     "When the account was last updated."
     updated_at: DateTime!
 }
+
+type GpsData {
+    id: ID!
+    latitude: Float!
+    longitude: Float!
+    recorded_at: DateTime!
+    created_at: DateTime!
+    updated_at: DateTime!
+}
+
+
