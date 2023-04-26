@@ -1,0 +1,15 @@
+{
+  "name": "raspberrypi",
+  "version": "1.0.0",
+  "description": "NodeJs libs to fetch GPS data on a raspberry pi",
+  "main": "gps.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Sumit Vig",
+  "license": "ISC",
+  "dependencies": {
+    "mysql2": "^3.2.4",
+    "node-gpsd": "^0.3.4"
+  }
+}
